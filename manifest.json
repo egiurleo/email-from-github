@@ -15,6 +15,7 @@
    "default_popup": "popup.html"
  },
  "permissions" : [
-   "declarativeContent"
+   "declarativeContent",
+   "tabs"
  ]
 }
