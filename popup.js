@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     getEventInfo(githubId, email => {
       var div = document.getElementById('email');
-      div.innerHTML += `Email: ${email}`;
+      div.innerHTML = `Email: ${email}`;
     });
   });
 });
