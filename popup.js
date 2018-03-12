@@ -12,6 +12,32 @@
 // 	echo "$tmp"
 // fi
 
+function getEventInfo(userId, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', `https://api.github.com/users/${userId}/events/public`, true);
+  xhr.send();
+  xhr.addEventListener("readystatechange", processRequest, false);
+
+  function processRequest(e) {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      var response = JSON.parse(xhr.responseText);
+      response.forEach(event => {
+        if(event.payload && event.payload.commits) {
+          event.payload.commits.forEach(commit => {
+            if(commit.author && commit.author.email) {
+              const email = commit.author.email;
+              if(email) {
+                callback(email);
+                return;
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const queryInfo = {
     active: true,
@@ -22,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabUrl = tabs[0].url;
     const githubId = tabUrl.split('/')[3];
 
-    
+    getEventInfo(githubId, email => {
+      var div = document.getElementById('email');
+      div.innerHTML += `Email: ${email}`;
+    });
   });
 });
